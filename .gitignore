@@ -1,0 +1,5 @@
+# gitignore file for home directory
+# should ignore everything by default
+**/**
+!.gitignore
+!.vimrc

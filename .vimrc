@@ -1,0 +1,101 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+
+" Plugin 'Lokaltog/vim-easymotion'
+Plugin 'posva/vim-vue'
+Plugin 'pangloss/vim-javascript'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'ternjs/tern_for_vim'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'tpope/vim-sleuth'
+Plugin 'tpope/vim-cucumber'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'fatih/vim-go'
+
+" plugin on GitHub repo
+" Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+" Plugin 'L9'
+" Git plugin not hosted on GitHub
+" Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+" Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Install L9 and avoid a Naming conflict if you've already installed a
+" different version somewhere else.
+" Plugin 'ascenator/L9', {'name': 'newL9'}
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+" indent rules
+autocmd Filetype javascript setlocal ts=2 sw=2 sts=0 expandtab
+autocmd Filetype vue setlocal ts=2 sw=2 sts=0 expandtab
+autocmd Filetype html setlocal ts=2 sw=2 sts=0 expandtab
+autocmd Filetype css setlocal ts=2 sw=2 sts=0 noexpandtab
+au BufRead,BufNewFile *.go setlocal noet ts=4 sw=4 foldnestmax=1 foldlevel=0 foldmethod=syntax
+
+" color scheme
+au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
+
+" fold rules
+set foldlevel=0 foldcolumn=2 foldnestmax=2
+
+au BufRead,BufNewFile *.go setlocal foldnestmax=1 foldlevel=0
+let g:go_fmt_experimental = 1 " fixes closing folds on write in go
+
+" Don't screw up folds when inserting text that might affect them, until
+" leaving insert mode. Foldmethod is local to the window.
+autocmd InsertEnter * let w:last_fdm=&foldmethod | setlocal foldmethod=manual
+autocmd InsertLeave * let &l:foldmethod=w:last_fdm
+
+" disable arrow keys
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+
+" show ruler
+set ruler
+
+" set text width to 80
+set tw=80
+
+" use space for toggling fold status
+nnoremap <Space> za
+
+" set colors for folded lines
+highlight Folded ctermfg=white ctermbg=darkgrey
+
+" set split directions
+set splitbelow
+set splitright
+
+" TODO not sure
+set backspace=eol,indent,start
+
+syntax on
