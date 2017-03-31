@@ -2,4 +2,4 @@
 # should ignore everything by default
 **/**
 !.gitignore
-!.vimrc
+!.vimrc*
