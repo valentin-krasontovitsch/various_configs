@@ -58,6 +58,20 @@ autocmd Filetype vue setlocal ts=2 sw=2 sts=0 expandtab
 autocmd Filetype html setlocal ts=2 sw=2 sts=0 expandtab
 autocmd Filetype css setlocal ts=2 sw=2 sts=0 noexpandtab
 au BufRead,BufNewFile *.go setlocal noet ts=4 sw=4 foldnestmax=1 foldlevel=0 foldmethod=syntax
+au BufRead,BufNewFile *.tex setlocal ts=2 sw=2 foldnestmax=3 foldlevel=1 foldmethod=indent expandtab
+
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix
+
+let python_highlight_all=1
+highlight BadWhitespace ctermbg=red 
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
 " color scheme
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
@@ -99,3 +113,8 @@ set splitright
 set backspace=eol,indent,start
 
 syntax on
+
+set encoding=utf-8
+
+au BufWritePost ~/Documents/math/phd-thesis/*.tex silent ! pdflatex phd_thesis_krasontovitsch.tex > log~
+
