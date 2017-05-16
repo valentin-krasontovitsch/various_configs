@@ -76,6 +76,7 @@ au BufNewFile,BufRead *.py
     \ set textwidth=79 |
     \ set expandtab |
     \ set autoindent |
+    \ set foldmethod=indent |
     \ set fileformat=unix
 
 au BufNewFile,BufRead *.js, *.html, *.css
