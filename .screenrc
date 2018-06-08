@@ -2,7 +2,7 @@ defscrollback 10000
 term xterm
 vbell off
 
-
+shell /usr/bin/fish
 ## ctrl+a navigating regions
 bind j focus down
 bind k focus up
@@ -14,9 +14,14 @@ bind b focus bottom
 startup_message off
 hardstatus alwayslastline
 
+# make CWD available for screen hardstatus as %1`
+backtick 1 0 5 echo $PWD
+# more recent, more concise
+#hardstatus string "%H | %S - %n | %f %1` %h %= %D %M%d -%C%A%{-}"
+# more verbose, older
 hardstatus string "%{= KW}GNU screen | Host: %H | Session: %S | Window: %n - %h %= %D, %d %M %Y | %C:%s"
 
-
+# open bunch of blank screens
 screen
 screen
 screen
