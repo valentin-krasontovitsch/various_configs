@@ -1,36 +1,86 @@
-let g:ycm_server_python_interpreter='/usr/bin/python'
+" Automatically source vimrc on change
+autocmd! bufwritepost *vimrc source %
 
-set nocompatible              " required
+set shell=/bin/bash
+set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" automatically download vim-plug
+" Set GIT_SSL_NO_VERIFY to true, and use --insecure for curl to handle proxy
+let $GIT_SSL_NO_VERIFY = 'true'
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --insecure --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
-Plugin 'elmcast/elm-vim'
-Plugin 'lambdatoast/elm.vim'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'jnurmine/Zenburn'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'altercation/vim-colors-solarized'
+  Plug 'posva/vim-vue'
+  Plug 'pangloss/vim-javascript'
+    Plug 'Valloric/YouCompleteMe', { 'do': 'python3 install.py  --gocode-completer --tern-completer ' }
+    Plug 'ternjs/tern_for_vim'
+  Plug 'scrooloose/nerdcommenter'
+  Plug 'tpope/vim-cucumber'
+  Plug 'airblade/vim-gitgutter'
+  Plug 'fatih/vim-go'
 
+call plug#end()
 
+" general fold rules
+set foldlevel=4 foldcolumn=0 foldnestmax=6 foldmethod=indent
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+" general indent rules
+set ts=2 sw=2 sts=0 expandtab
 
-" :color evening
-colorscheme zenburn
-call togglebg#map("<F5>")
-ToggleBG
+" special indent rules
+augroup indentation_folding
+  au!
+  au Filetype javascript setlocal ts=2 sw=2 sts=0 expandtab foldmethod=syntax
+  au Filetype vue setlocal ts=2 sw=2 sts=0 expandtab foldmethod=syntax
+  au Filetype html setlocal ts=2 sw=2 sts=0 expandtab foldmethod=syntax
+  au Filetype css setlocal ts=2 sw=2 sts=0 noexpandtab foldmethod=syntax
+  au BufRead,BufNewFile *.go setlocal noet ts=4 sw=4 foldnestmax=3 foldlevel=4
+    \ foldmethod=syntax
+  au BufRead,BufNewFile *.tex setlocal ts=2 sw=2 foldnestmax=3 foldlevel=4
+    \ foldmethod=indent expandtab
+  au BufNewFile,BufRead *.yaml,*.yml setlocal foldmethod=indent ts=2 sw=2 sts=0
+    \ expandtab foldnestmax=1
+  au BufNewFile,BufRead *.py setlocal tabstop=4 softtabstop=4 shiftwidth=4
+    \ textwidth=79 expandtab autoindent foldmethod=indent fileformat=unix
+  " Don't screw up folds when inserting text that might affect them, until
+  " leaving insert mode. Foldmethod is local to the window.
+  autocmd InsertEnter * let w:last_fdm=&foldmethod | setlocal foldmethod=manual
+  autocmd InsertLeave * let &l:foldmethod=w:last_fdm
+augroup END
 
-" fold rules
-set foldlevel=0 foldcolumn=2 foldnestmax=2
+" COLORS
+" first set general color scheme
+colorscheme peachpuff
+" highlight 'bad' whitespace (at end of line)
+highlight BadWhitespace ctermbg=red
+
+augroup highlighting
+  au!
+  au BufRead,BufNewFile * match BadWhitespace /\s\+$/
+augroup END
+
+" set colors for folded lines
+" ssh onto machine, using putty in windows config
+map <F6> :highlight Folded ctermfg=2 ctermbg=lightgrey<CR>
+" native machine config
+map <F7> :highlight Folded ctermfg=white ctermbg=0<CR>
+highlight Folded ctermfg=white ctermbg=0
+
+" color scheme for yaml
+augroup colors
+  au!
+  au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
+augroup END
+
+" MISCELLANEOUS
+let g:go_fmt_experimental=1 " fixes closing folds on write in go
+let python_highlight_all=1
 
 " disable arrow keys
 noremap <Up> <NOP>
@@ -42,57 +92,66 @@ noremap <Right> <NOP>
 set ruler
 
 " set text width to 80
-set tw=80
+set tw=79
 
 " use space for toggling fold status
 nnoremap <Space> za
-
-" set colors for folded lines
-" highlight Folded ctermfg=white ctermbg=darkgrey
 
 " set split directions
 set splitbelow
 set splitright
 
-syntax on
-
-set ttimeoutlen=100
-set ttyfast
-set lazyredraw
-
-set smarttab
-set expandtab
-
-let g:elm_format_autosave = 1
-
-let g:ycm_python_binary_path='/usr/bin/python3'
-let g:ycm_autoclose_preview_window_after_completion=1
-set shortmess+=c
-
-au BufNewFile,BufRead *.py
-    \ set tabstop=4 |
-    \ set softtabstop=4 |
-    \ set shiftwidth=4 |
-    \ set textwidth=79 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set foldmethod=indent |
-    \ set fileformat=unix
-
-au BufNewFile,BufRead *.js, *.html, *.css
-    \ set tabstop=2 |
-    \ set softtabstop=2 |
-    \ set shiftwidth=2
-    \ set expandtab
-
-let python_highlight_all=1
-
-highlight BadWhitespace ctermbg=red 
-
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
-au BufRead,BufNewFile *.tex setlocal expandtab ts=2 sw=2 foldnestmax=4 foldlevel=1 foldmethod=indent
+" let backspace delete autoindentation and across lines
+set backspace=eol,indent,start
 
 set encoding=utf-8
 
-" working on thesis
-au BufWritePost ~/Documents/math/phd-thesis/*.tex silent ! pdflatex phd_thesis_krasontovitsch.tex > log~
+" disable visual bell
+set vb
+set t_vb=
+
+" Better command-line completion
+set wildmenu
+" Complete like most shells – longest substring first, then iterate through
+"  full matches
+set wildmode=longest:full,full
+
+" Show partial commands in the last line of the screen
+set showcmd
+
+" Do not highlight searches by default
+set nohlsearch
+
+" Backups
+
+" don't keep swp files
+set noswapfile
+
+"------------------------------------------------------------
+" Usability options
+"
+" These are options that users frequently set in their .vimrc. Some of them
+" change Vim's behaviour in ways which deviate from the true Vi way, but
+" which are considered to add usability. Which, if any, of these options to
+" use is very much a personal preference, but they are harmless.
+
+" Use case insensitive search, except when using capital letters
+set ignorecase
+set smartcase
+
+" Replace all matches on the line, not just the first,
+"  by default, without requiring …/g
+set gdefault
+
+" Incremental search
+set incsearch
+
+" Set the search scan to wrap around the file
+set wrapscan
+
+" Always display the status line, even if only one window is displayed
+set laststatus=2
+
+" Use <F11> to toggle between 'paste' and 'nopaste'
+set pastetoggle=<F11>
+

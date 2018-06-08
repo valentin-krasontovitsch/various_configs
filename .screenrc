@@ -1,0 +1,30 @@
+defscrollback 10000
+term xterm
+vbell off
+
+
+## ctrl+a navigating regions
+bind j focus down
+bind k focus up
+bind ^h focus prev
+bind t focus top
+bind b focus bottom
+
+
+startup_message off
+hardstatus alwayslastline
+
+hardstatus string "%{= KW}GNU screen | Host: %H | Session: %S | Window: %n - %h %= %D, %d %M %Y | %C:%s"
+
+
+screen
+screen
+screen
+screen
+screen
+screen
+screen
+screen
+screen
+screen
+

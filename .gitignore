@@ -3,3 +3,4 @@
 **/**
 !.gitignore
 !.vimrc*
+!.screenrc
