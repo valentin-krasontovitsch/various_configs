@@ -5,3 +5,14 @@ OPENVPN_SUBNET=10.8.77.0/24
 iptables -A FORWARD -i $IF_MAIN -o $IF_TUNNEL -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -s $OPENVPN_SUBNET -o $IF_MAIN -j ACCEPT
 iptables -t nat -A POSTROUTING -s $OPENVPN_SUBNET -o $IF_MAIN -j MASQUERADE
+
+# make the rules permanent (after applying them):
+# run `sudo bash -c "iptables-save > /etc/iptables.up.rules"`
+# edit the above file to remove stuff that is automatic, e.g. docker
+# edit `/etc/network/if-pre-up.d/iptables` and put the content
+# ```
+# !/bin/sh
+# /sbin/iptables-restore < /etc/iptables.up.rules
+# ```
+# make the file executable `sudo chmod +x /etc/network/if-pre-up.d/iptables`
+# done.
